@@ -1,0 +1,14 @@
+{
+  "name": "2-1.graphql-api-setup",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "apollo-server": "^3.12.0",
+    "convert-csv-to-json": "^2.0.0",
+    "graphql": "^16.6.0"
+  }
+}
