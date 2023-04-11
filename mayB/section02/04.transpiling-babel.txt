@@ -1,0 +1,12 @@
+트랜스파일링(transpiling) - 어떤 특정 언어로 작성된 소스 코드를 다른 소스코드로 변환하는 것을 의미한다 
+바벨(babel) - ES6 이상으로 작성된 코드를 ES5 이하에서 작동하도록 만드는 것을 의미한다
+
+yarn add -D @babel/cli @babel/core @babel/node @babel/preset-env
+
+@babel/core - 바벨을 사용하기 위해 필수
+@babel/cli - command line 을 통해 코드를 트랜스파일
+@babel/node - ES6으로 작성된 노드 코드를 실행 (성능 저하가 있어 개발 및 테스트 시에만 사용)
+@babel/parse-env - 프리셋을 통해 간단히 바벨 트랜스 파일링 설정
+
+바벨을 사용함으로써, 확장자 명을 작성하지 않아도 됨 user.js -> user
+- 파일을 import 하는 것이 아니라, 폴더를 import 하는 방식?
