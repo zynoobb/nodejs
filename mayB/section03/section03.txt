@@ -1,0 +1,48 @@
+express - http / node.js / 라이브러리
+
+1. restAPI
+HTTP - Request / Response - start line / header / body 
+header - 요청과 응답의 추가 정보들
+body - 중요한 정보들을 담아 요청을 주고 받음
+
+자원
+- http url (ex, /orders, /posts, /:post:id)
+protocol / host / port / path / path variable / query
+http://localhost:8000/users/:id?name=홍길동&age=21
+
+행위
+- http method (ex, get, post, patch, put, delete)
+- CRUD (Create, Read, Update, Delete)
+
+표현
+- 요청과 응답의 형식
+- JSON / XML / TEXT
+
+2. 미들웨어
+클라이언트 서버 중간의 다리 역할 (소프트웨어에서 다른 소프트웨어와 함께 동작하도록 설계된 컴포넌트)
+서버와 클라이언트 사이의 통신 / 데이터베이스와의 상호작용 / 웹 어플리케이션 라우팅 / 보안 로깅 수행
+
+어플리케이션 레벨 미들웨어
+- 클라이언트에서 서버로 가는 모든 요청이 거치는 미들웨어
+
+라우터 레벨 미들웨어
+- 모든 요청에 대한 검사 X / 요청(메서드)마다 다른 방식으로 거치는 미들웨어
+
+3. 익스프레스 기본 모듈 / 자주 사용되는 라이브러리
+- cors : 접근 가능한 도메인 제한
+// express 미들웨어 사용법 app.use()
+app.use(cors({
+  origin : "https://www.naver.com", // cors 제한 방식. 해당 url로 요청이 와야만 응답
+}));
+
+- helmet : http 헤더 설정을 통해 보안 강화
+- dayjs : 날짜 관련 작업을 할 때 사용
+- nodemon : 수정된 코드에 따라 다시 서버를 실행
+- axios : 다른 서버에 요청을 보낼 때 사용
+- bcrypt : 비밀번호 암호화에 사용
+- jsonwebtoken : 로그인한 유저 정보를 토큰으로 만들기 위해 사용
+
+
+4. app
+- use : 미들웨어 / 라우터 두가지 용도로만 사용됨
+- get / post / patch / delete 
