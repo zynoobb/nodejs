@@ -3,11 +3,12 @@ import { Router } from "express";
 // Router
 class UserController {
   router;
+  path = "/users"; // 라우터의 경로 설정
   users = [
     {
       id: 1,
       name: "jino",
-      age: 30,
+      age: 1,
     },
   ];
   constructor() {
