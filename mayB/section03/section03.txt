@@ -50,3 +50,6 @@ app.use(cors({
 5. 라우터
 http 메서드와 url 경로를 기반으로 요청을 처리  
 폴더들을 안정적이고 깔끔하게 만들어줄 수 있음
+
+6. DTO
+data transfer object
