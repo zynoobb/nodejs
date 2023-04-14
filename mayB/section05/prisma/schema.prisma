@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String @db.VarChar(200)
+  phoneNumber String @db.Char(11)
+  age Int
+  posts Post[]
+  // post Post? 일대일인 경우
+}
+
+model Post {
+  id String @id @default(uuid())
+  title String @db.VarChar(200)
+  content String @db.LongText
+  userId String // foreign key
+  // userId String @unique // foreign key
+
+  // 이후에 생기는 테이블에게 relation을 설정해준다.
+  user User @relation(fields: [userId],references: [id])
+}
