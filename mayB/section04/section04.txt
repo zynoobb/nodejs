@@ -1,0 +1,103 @@
+1. MySQL 자료형 (엄격하면 엄격할수록 제한이 없는 자료형이 읽는 속도가 더 빠름)
+정수 TINYINT -128~127
+- 고정소수점 DECIMAL(길이, 소수점) / 실수의 값을 정확하게 표현하기 위해 사용 ex) DECIMAL(5,2) 123.45 
+  정확한 값 표기 / 오차가 발생하지 않음
+- 부동소수점 FLOAT(길이, 소수점) / 4byte / 소수의 자리를 미리 정해놓고 고정된 자리수로만 소수 부분을 표현하는 방식
+        DOUBLE(길이, 소수점) / 8byte
+  근사한 값 표기 / 오차가 발생할 수 있음
+
+문자형
+- CHAR(n) / 고정 길이를 가지는 문자열을 저장 / 0~255 / 핸드폰번호 / 고정된 길이로 저장 & 속도 빠름 
+- VARCHAR(n) / 가변 길이를 가지는 문자열을 저장하며, 후행공백을 제거하지 않음 / 0~65535 / 이름 이메일 / 길이가 변할 수 있음 & 중간 단계의 속도
+- ENUM / 문자형태의 value값을 숫자로 저장 / 자주 안씀 (수정 확장 불편)
+
+날짜와 시간 타입
+- DATE / YYYY-MM-DD
+- DATETIME / YYYY-MM-DD HH:MM:SS
+- TIMESTAMP / 저장 시간이 찍힘
+- TIME / HH:MM:SS
+- YEAR / YYYY
+
+쿼리문
+SELECT id,age,name,email  FROM `User` WHERE  name = 'John' ;
+
+Count // jo가 들어간 사람들의 숫자 세기
+SELECT COUNT(*) FROM `User` WHERE name LIKE "%jo%";
+
+order by // 정렬 // 나이에 따른 오름차순
+SELECT * FROM `User` ORDER BY age ASC 
+
+페이징 // offset 어디서부터 가져올지 / limit 얼마나 가져올지 offset 1(즉 2에서부터) Limit 2인 2개의 row 가져옴
+SELECT * FROM `User` ORDER BY age ASC LIMIT 2 OFFSET 1
+SELECT * FROM `User` ORDERS LIMIT 3; // orderby 를 사용하지 않는 경우 orders 를 사용해주어야 함
+SELECT * FROM `User` ORDERS LIMIT 3 OFFSET 2; // offset 적용
+
+관계형 쿼리
+- PK - Primary Key / 데이터를 구분하는 키 / 중복X & nullX / 테이블 당 하나만 존재
+- Unique Key / 중복X / null 값 허용 / 여러개 적용 가능 (phoneNumber)
+- FK - Foreign Key / 다른 테이블의 PK키 참조
+
+- Inner Join - 교집합에 있는 내용을 불러옴
+  SELECT u.id, u.name, p.userId , p.id as postId, p.title 
+  FROM User as u
+  JOIN post as p
+  ON u.id = p.userId  // userId == postId 일치하는 데이터 가져옴
+
+- Left Join - 먼저 불러온 것 기준으로 모두 가져옴 // 예시에서는 User 는 다 가져오되, Post는 포함된 부분만 가져옴
+  SELECT u.id, u.name, p.userId , p.id as postId, p.title 
+  FROM User as u
+  LEFT JOIN post as p
+  ON u.id = p.userId;
+
+- Right Join - left Join의 반대 / Post를 기준으로 모두 가져옴
+  SELECT u.id, u.name, p.userId , p.id as postId, p.title 
+  FROM User as u
+  RIGHT JOIN post as p
+  ON u.id = p.userId;
+
+ERD 관계도 작성 DBdiagram.io
+
+
+Table User {
+  id uuid
+  name varchar(200)
+  age int
+  email varchar(200)
+  phoneNumber char(11)
+}
+
+Table Usersetting {
+  id uuid
+  alarm boolean
+  privateAgreement boolean
+  userId uuid
+}
+
+Table Post {
+ id uuid
+ title varchar(200) 
+ content longtext
+ userId uuid // fk
+}
+
+Table PostLike {
+  userId uuid
+  postId uuid
+
+  // pk : userId + postId
+}
+
+Table PostBookMark {
+  id uuid // pk
+  userId uuid
+  postId uuid
+  title varchar(200)
+  extraContent varchar(200)
+}
+
+Ref : "User"."id" < "Post"."userId"
+Ref : "User"."id" < "Usersetting"."userId"
+Ref : "User"."id" < "PostLike"."userId"
+Ref : "Post"."id" < "PostLike"."postId"
+Ref : "User"."id" < "PostBookMark"."userId"  
+Ref : "Post"."id" < "PostBookMark"."postId"
