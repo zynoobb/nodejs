@@ -14,6 +14,7 @@ model User {
   id String @id @default(uuid())
   name String @db.VarChar(200)
   phoneNumber String @db.Char(11)
+  email String @db.VarChar(100)
   age Int
   posts Post[]
   // post Post? 일대일인 경우
