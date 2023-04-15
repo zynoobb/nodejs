@@ -1,5 +1,9 @@
-import * as Swaggers from "../controllers/swagger";
 import defaultSwagger from "./defaultSwagger";
+import * as UserSwagger from "../users/swagger";
+
+const Swaggers = {
+  ...UserSwagger,
+};
 
 const { paths } = Object.values(Swaggers).reduce(
   (acc, apis) => {

@@ -24,3 +24,26 @@ yarn prisma db pull
   DB 수정 내용을 불러오는 기능 / 맨 처음 세팅할 때, 이미 만들어진 DB일 때 사용
 yarn prisma db push
   migration 이력 없이 DB에 수정사항 반영 / 웬만하면 yarn prisma migrate dev 사용 (이력이 안남으니)
+
+query
+- GET
+  database.{model}.findUnique() / 유니크한 값을 통해 데이터를 찾음 (PK, 유니크 key)
+                   findFirst({where : { 조건 }}) / 조건에 맞는 데이터 중 가장 최근 데이터를 찾음
+                   findMany({where : { 조건 }}) / 조건에 맞는 데이터를 모두 찾음
+  where 조건에 맞는 데이터를 불러옴 / 병렬로 입력 시 모두 해당하는 데이터 가져옴
+  where - OR 배열 안의 조건을 하나라도 만족하는 데이터 찾음 
+    where : { OR : [ {1조건 }, { 2조건 }]}
+  orderBy 해당 컬럼 기준으로 desc(내림) || asc(오름)차순으로 불러옴
+  skip/take / skip한 개수만큼 제외하고 take한 만큼 가져오기
+    ex) findMany({ skip:2, take:5 })
+
+- CREATE
+  database.{model}.create() // 데이터를 생성함
+    create({data : { id....}})
+
+- UPDATE
+  database.{model}.update() // 데이터를 수정함
+    update({where :{ id }, data:{ 수정할 내용 }})
+
+- DELETE
+  database.{model}.delete() // 데이터를 삭제함
