@@ -1,9 +1,12 @@
-import express, { Router } from "express";
+import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import controllers from "./controllers";
 import { swaggerDocs, options } from "./swagger";
 import swaggerUi from "swagger-ui-express";
+import dotenv from "dotenv";
+const config = dotenv.config();
+// config.parsed();
 
 const app = express();
 app.use(cors({ origin: "*" }));

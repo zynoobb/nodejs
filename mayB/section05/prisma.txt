@@ -3,3 +3,24 @@ prisma
 단순 노동이 줄어들어 개발에 집중 가능
 실수를 줄일 수 있는 단단한 제약조건
 typescript와의 환상적인 호흡
+
+prisma로 DB 연동하기
+mysql:{유저이름}:{DB pw}@{DB_URL}:{PORT}/{DB_NAME}
+
+프리스마 명령어
+yarn add prisma 
+  설치
+yarn prisma init 
+  현재 프로젝트에 프리즈마를 사용하는데 필요한 파일 생성 / prisma/schema.prisma, prisma/.env
+yarn prisma generate  
+  schema.prisma를 기반으로 Prisma client 등의 자원 생성 / schema.prisma 수정 후 반드시 실행
+yarn prisma migrate dev
+  schema.prisma 파일의 내용을 기반으로 DB업데이트
+  migrate를 진행하면 DB에 _prisma_migrations 테이블이 생성/수정됨
+  git처럼 DB 수정 내역을 관리 가능
+yarn prisma migrate dev --create-only
+  실제 DB에 반영하지 않고 Migration 파일 반영 가능
+yarn prisma db pull
+  DB 수정 내용을 불러오는 기능 / 맨 처음 세팅할 때, 이미 만들어진 DB일 때 사용
+yarn prisma db push
+  migration 이력 없이 DB에 수정사항 반영 / 웬만하면 yarn prisma migrate dev 사용 (이력이 안남으니)

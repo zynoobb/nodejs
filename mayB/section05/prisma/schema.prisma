@@ -26,6 +26,6 @@ model Post {
   userId String // foreign key
   // userId String @unique // foreign key
 
-  // 이후에 생기는 테이블에게 relation을 설정해준다.
+  // 나중에 생기는 테이블에게 relation을 설정해준다.
   user User @relation(fields: [userId],references: [id])
 }
