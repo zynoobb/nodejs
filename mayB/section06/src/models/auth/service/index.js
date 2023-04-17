@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export class AuthService {
-  UserService;
+  userService;
 
   constructor() {
     this.userService = new UserService();
@@ -31,7 +31,25 @@ export class AuthService {
       expiresIn: "14d",
     });
 
-    console.log({ accessToken, refreshToken });
+    return { accessToken, refreshToken };
+  }
+
+  // props : LoginDTO
+  async login(props) {
+    const isExist = await this.userService.checkUserByEmail(props.email);
+    if (!isExist) throw { status: 404, message: "유저가 존재하지 않습니다." };
+
+    const isCorrect = await props.comparePassword(isExist.password);
+    if (!isCorrect)
+      throw { status: 400, message: "비밀번호를 잘못 입력하였습니다." };
+
+    const accessToken = jwt.sign({ id: isExist.id }, process.env.JWT_KEY, {
+      expiresIn: "2h",
+    });
+    const refreshToken = jwt.sign({ id: isExist.id }, process.env.JWT_KEY, {
+      expiresIn: "14d",
+    });
+
     return { accessToken, refreshToken };
   }
 }

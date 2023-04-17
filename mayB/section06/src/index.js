@@ -1,11 +1,12 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import controllers from "./controllers";
+import { Controllers } from "./models";
 import { swaggerDocs, options } from "./swagger";
 import swaggerUi from "swagger-ui-express";
 import database from "./database";
 import dotenv from "dotenv";
+import { jwtAuth } from "./middleware";
 
 dotenv.config();
 
@@ -19,8 +20,9 @@ dotenv.config();
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true, limit: "700mb" }));
+  app.use(jwtAuth);
 
-  controllers.forEach((controller) => {
+  Controllers.forEach((controller) => {
     app.use(controller.path, controller.router);
   });
 

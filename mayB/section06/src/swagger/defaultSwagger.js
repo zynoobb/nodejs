@@ -5,6 +5,15 @@ const defaultSwagger = {
     title: "스웨거 연습",
     description: "스웨거 연습 페이지",
   },
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
 };
 
 export default defaultSwagger;

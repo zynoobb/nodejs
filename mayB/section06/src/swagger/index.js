@@ -1,9 +1,5 @@
-import defaultSwagger from "./defaultSwagger";
-import * as UserSwagger from "../users/swagger";
-
-const Swaggers = {
-  ...UserSwagger,
-};
+import defaultSwagger from "../swagger/defaultSwagger";
+import { Swaggers } from "../models";
 
 const { paths } = Object.values(Swaggers).reduce(
   (acc, apis) => {
