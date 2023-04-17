@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String @db.VarChar(200)
+  phoneNumber String @db.Char(11)
+  email String @db.VarChar(100) @unique
+  age Int
+  password String
+  posts Post[]
+  postLikes PostLike[]
+  comments Comment[]
+}
+
+model PostLike {
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  postId String
+  post Post @relation(fields: [postId], references: [id])
+
+  // 테이블 내 존재하는 것으로 무언가를 만들 때는 @@
+  @@id([userId, postId])
+}
+
+model Post {
+  id String @id @default(uuid())
+  title String @db.VarChar(200)
+  content String @db.LongText
+  createAt DateTime @default(now()) // now 생성된 시점을 기점
+
+  userId String // foreign key
+  user User @relation(fields: [userId],references: [id])
+
+  comments Comment[]
+  postLike PostLike[]
+  tag Tag[]
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  content String @db.VarChar(300)
+  parentCommentId String?
+  parentComment Comment? @relation("parentComment",fields: [parentCommentId], references: [id])
+
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  postId String
+  post Post @relation(fields: [postId], references: [id])
+
+  childComments Comment[] @relation("parentComment")
+}
+
+model Tag {
+  id String @id @default(uuid())
+  name String @db.VarChar(120)
+  postId String
+  post Post @relation(fields: [postId], references: [id])
+}
