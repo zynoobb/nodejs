@@ -11,6 +11,7 @@ export class UserService {
     });
 
     if (!user) throw { status: 404, message: "유저 없음" };
+    return user;
   }
 
   async checkUserByEmail(email) {

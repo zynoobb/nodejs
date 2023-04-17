@@ -16,6 +16,7 @@ class AuthController {
     // auth에 대한 모든 메서드는 post로 작성
     this.router.post("/register", this.register.bind(this));
     this.router.post("/login", this.login.bind(this));
+    this.router.post("/refresh", this.refresh.bind(this));
   }
 
   async register(req, res, next) {
@@ -45,6 +46,21 @@ class AuthController {
       res.status(200).json({
         accessToken,
         refreshToken,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async refresh(req, res, next) {
+    try {
+      const body = req.body;
+      const { newAccessToken, newRefreshToken } =
+        await this.authService.refresh(body.accessToken, body.refreshToken);
+
+      res.status(200).json({
+        newAccessToken,
+        newRefreshToken,
       });
     } catch (err) {
       next(err);

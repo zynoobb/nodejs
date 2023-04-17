@@ -52,4 +52,29 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
+
+  async refresh(accessToken, refreshToken) {
+    const accessTokenPayload = jwt.verify(accessToken, process.env.JWT_KEY, {
+      ignoreExpiration: true, // 만료된 것 무시
+    });
+    const refreshTokenPayload = jwt.verify(refreshToken, process.env.JWT_KEY);
+
+    if (accessTokenPayload.id !== refreshTokenPayload.id) {
+      throw { status: 403, message: "권한이 없습니다." };
+    }
+
+    const user = await this.userService.findUserById(accessTokenPayload.id);
+
+    const newAccessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
+      expiresIn: "2h",
+    });
+    const newRefreshToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
+      expiresIn: "14d",
+    });
+
+    return {
+      newAccessToken,
+      newRefreshToken,
+    };
+  }
 }
