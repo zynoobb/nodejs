@@ -15,8 +15,9 @@ model User {
   name String @db.VarChar(200)
   phoneNumber String @db.Char(11)
   email String @db.VarChar(100) @unique
-  age Int
   password String
+  description String? @db.VarChar(300)
+
   posts Post[]
   postLikes PostLike[]
   comments Comment[]

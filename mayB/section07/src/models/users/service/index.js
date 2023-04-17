@@ -43,9 +43,9 @@ export class UserService {
       data: {
         name: props.name,
         email: props.email,
-        age: props.age,
         phoneNumber: props.phoneNumber,
         password: props.password,
+        description: props.description,
       },
     });
 
@@ -60,6 +60,9 @@ export class UserService {
     });
 
     if (!isExist) throw { status: 404, message: "유저를 찾을 수 없습니다." };
+    if (props.password) {
+      await props.updatePassword();
+    }
 
     await database.user.update({
       where: {
@@ -68,9 +71,9 @@ export class UserService {
       data: {
         name: props.name,
         email: props.email,
-        age: props.age,
         phoneNumber: props.phoneNumber,
         password: props.password,
+        description: props.description,
       },
     });
   }
