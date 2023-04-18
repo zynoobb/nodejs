@@ -39,6 +39,7 @@ export class UserService {
   }
 
   async createUser(props) {
+    await props.hashPassword();
     const newUser = await database.user.create({
       data: {
         name: props.name,

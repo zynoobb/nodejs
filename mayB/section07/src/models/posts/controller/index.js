@@ -16,14 +16,14 @@ class PostController {
   init() {
     this.router.post("/", this.createPost.bind(this));
     this.router.post("/comment", this.createComment.bind(this));
-    this.router.post("/child-comment", this.createChildComment.bind(this));
+    this.router.post("/child-comments", this.createChildComment.bind(this));
   }
   // create Post
   async createPost(req, res, next) {
     try {
-      if (!req.user) throw { status: 401, message: "로그인을 진행해주세요." };
       const body = req.body;
-
+      console.log(body.title, body.content, body.tags, req.user);
+      if (!req.user) throw { status: 401, message: "로그인을 진행해주세요." };
       const newPostId = await this.postService.createPost(
         new CreatePostDTO({
           title: body.title,

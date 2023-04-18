@@ -32,8 +32,8 @@ export const getUserSwagger = {
                       name: {
                         type: "string",
                       },
-                      age: {
-                        type: "number",
+                      description: {
+                        type: "string",
                       },
                       email: {
                         type: "string",
@@ -81,23 +81,26 @@ export const getUsersSwagger = {
               schema: {
                 type: "object",
                 properties: {
-                  user: {
+                  users: {
                     type: "array",
-                    properties: {
-                      id: {
-                        type: "string",
-                      },
-                      name: {
-                        type: "string",
-                      },
-                      age: {
-                        type: "number",
-                      },
-                      email: {
-                        type: "string",
-                      },
-                      phoneNumber: {
-                        type: "string",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "string",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        description: {
+                          type: "string",
+                        },
+                        phoneNumber: {
+                          type: "string",
+                        },
                       },
                     },
                   },
@@ -138,13 +141,16 @@ export const updateUserSwagger = {
                 name: {
                   type: "string",
                 },
-                age: {
-                  type: "number",
+                description: {
+                  type: "string",
                 },
                 email: {
                   type: "string",
                 },
                 phoneNumber: {
+                  type: "string",
+                },
+                password: {
                   type: "string",
                 },
               },
@@ -182,13 +188,16 @@ export const createUserSwagger = {
                 name: {
                   type: "string",
                 },
-                age: {
-                  type: "number",
+                description: {
+                  type: "string",
                 },
                 email: {
                   type: "string",
                 },
                 phoneNumber: {
+                  type: "string",
+                },
+                password: {
                   type: "string",
                 },
               },
@@ -203,7 +212,9 @@ export const createUserSwagger = {
               schema: {
                 type: "object",
                 properties: {
-                  id: "string",
+                  id: {
+                    type: "string",
+                  },
                 },
               },
             },

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+dotenv.config();
 export class UpdateUserDTO {
   name;
   phoneNumber;
@@ -15,7 +16,10 @@ export class UpdateUserDTO {
     this.description = user.description ?? undefined;
   }
 
-  async updatePassword(password) {
-    this.password = await bcrypt.hash(password, process.env.PASSWORD_SALT);
+  async updatePassword() {
+    this.password = await bcrypt.hash(
+      this.password,
+      Number(process.env.PASSWORD_SALT)
+    );
   }
 }
