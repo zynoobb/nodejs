@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { pagination } from "../../../middleware/pagination";
 import { CreatePostDTO, CreateCommentDTO, CreateChildCommentDTO } from "../dto";
 import { PostService } from "../service";
 
@@ -14,10 +15,82 @@ class PostController {
   }
 
   init() {
+    this.router.get("/detail/:id", this.getPost.bind(this));
+    this.router.get("/", pagination, this.getPosts.bind(this));
+    this.router.post("/:postId/like", this.createLike.bind(this));
+    this.router.delete("/:postId/like", this.deleteLike.bind(this));
+    this.router.post("/:postId/like-combined", this.postLike.bind(this));
+
     this.router.post("/", this.createPost.bind(this));
     this.router.post("/comment", this.createComment.bind(this));
     this.router.post("/child-comments", this.createChildComment.bind(this));
   }
+
+  async getPost(req, res, next) {
+    try {
+      const { id } = req.params;
+      const post = await this.postService.getPost(id, req.user);
+      res.status(200).json({ post });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // post?page=1&limit=1&searchValue=제목1
+  async getPosts(req, res, next) {
+    try {
+      const searchValue = req.query.searchValue;
+      const { posts, count } = await this.postService.getPosts(
+        { skip: req.skip, take: req.take },
+        searchValue
+      );
+
+      res.status(200).json({
+        posts,
+        count,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async createLike(req, res, next) {
+    if (!req.user) throw { status: 401, message: "로그인을 진행해주세요" };
+    const { postId } = req.params;
+    await this.postService.createPostLike(req.user.id, postId);
+
+    res.status(204).json({});
+    try {
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteLike(req, res, next) {
+    try {
+      if (!req.user) throw { status: 401, message: "로그인을 진행해주세요" };
+      const { postId } = req.params;
+      await this.postService.deletePostLike(req.user.id, postId);
+
+      res.status(204).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async postLike(req, res, next) {
+    try {
+      if (!req.user) throw { status: 401, message: "로그인을 진행해주세요" };
+      const { postId } = req.params;
+      const { isLike } = req.body;
+      await this.postService.postLike(req.user.id, postId, isLike);
+
+      res.status(204).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+
   // create Post
   async createPost(req, res, next) {
     try {
