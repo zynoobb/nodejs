@@ -118,7 +118,7 @@ export const getUsersSwagger = {
 };
 
 export const updateUserSwagger = {
-  "/users": {
+  "/users/:id": {
     patch: {
       tags: ["User"],
       summary: "유저를 수정합니다.",
@@ -226,7 +226,7 @@ export const createUserSwagger = {
 };
 
 export const deleteUserSwagger = {
-  "/users": {
+  "/users/:id": {
     delete: {
       tags: ["User"],
       summary: "유저를 삭제합니다.",
