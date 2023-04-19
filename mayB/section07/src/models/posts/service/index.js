@@ -184,7 +184,6 @@ export class PostService {
   async createPost(props) {
     const user = await this.userService.findUserById(props.userId);
 
-    console.log(props.tags);
     const newPost = await database.post.create({
       data: {
         title: props.title,
@@ -269,5 +268,59 @@ export class PostService {
       },
     });
     return newChildComment.id;
+  }
+
+  async updatePost(postId, props, user) {
+    const post = await database.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) throw { status: 404, message: "게시글을 찾을 수 없습니다." };
+    if (post.userId !== user.id)
+      throw { status: 403, message: "본인 글만 수정이 가능합니다." };
+
+    if (props.tags) {
+      await database.tag.deleteMany({
+        where: {
+          postId: post.id,
+        },
+      });
+      await database.tag.createMany({
+        data: props.tags.map((tag) => ({
+          name: tag,
+          postId: post.id,
+        })),
+      });
+    }
+
+    await database.post.update({
+      where: {
+        id: post.id,
+      },
+      data: {
+        title: props.title,
+        content: props.content,
+      },
+    });
+  }
+  async updateComment(commentId, props, user) {
+    const comment = await database.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+    });
+    if (!comment) throw { status: 404, message: "댓글이 존재하지 않습니다." };
+    if (comment.userId !== user.id)
+      throw { status: 403, message: "댓글 수정 권한이 없습니다." };
+
+    await database.comment.update({
+      where: {
+        id: comment.id,
+      },
+      data: {
+        content: props.content,
+      },
+    });
   }
 }

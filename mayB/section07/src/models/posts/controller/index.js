@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { pagination } from "../../../middleware/pagination";
-import { CreatePostDTO, CreateCommentDTO, CreateChildCommentDTO } from "../dto";
+import {
+  CreatePostDTO,
+  CreateCommentDTO,
+  CreateChildCommentDTO,
+  UpdatePostDTO,
+  UpdateCommentDTO,
+} from "../dto";
 import { PostService } from "../service";
 
 class PostController {
@@ -17,13 +23,17 @@ class PostController {
   init() {
     this.router.get("/detail/:id", this.getPost.bind(this));
     this.router.get("/", pagination, this.getPosts.bind(this));
-    this.router.post("/:postId/like", this.createLike.bind(this));
-    this.router.delete("/:postId/like", this.deleteLike.bind(this));
-    this.router.post("/:postId/like-combined", this.postLike.bind(this));
 
     this.router.post("/", this.createPost.bind(this));
     this.router.post("/comment", this.createComment.bind(this));
     this.router.post("/child-comments", this.createChildComment.bind(this));
+    this.router.post("/:postId/like", this.createLike.bind(this));
+    this.router.post("/:postId/like-combined", this.postLike.bind(this));
+
+    this.router.delete("/:postId/like", this.deleteLike.bind(this));
+
+    this.router.patch("/:postId", this.updatePost.bind(this));
+    this.router.patch("/comment/:commentId", this.updateComment.bind(this));
   }
 
   async getPost(req, res, next) {
@@ -95,7 +105,7 @@ class PostController {
   async createPost(req, res, next) {
     try {
       const body = req.body;
-      console.log(body.title, body.content, body.tags, req.user);
+
       if (!req.user) throw { status: 401, message: "로그인을 진행해주세요." };
       const newPostId = await this.postService.createPost(
         new CreatePostDTO({
@@ -142,6 +152,38 @@ class PostController {
       );
 
       res.status(201).json({ id: newChildCommentId });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updatePost(req, res, next) {
+    try {
+      const { postId } = req.params;
+      const user = req.user;
+      const body = req.body;
+      if (!user) throw { status: 401, message: "로그인을 진행해주세요." };
+      this.postService.updatePost(postId, new UpdatePostDTO(body), user);
+
+      res.status(204).json({});
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateComment(req, res, next) {
+    try {
+      if (!req.user) throw { status: 401, message: "로그인을 진행해주세요." };
+      const { commentId } = req.params;
+      const body = req.body;
+
+      await this.postService.updateComment(
+        commentId,
+        new UpdateCommentDTO(body),
+        req.user
+      );
+
+      res.status(204).json({});
     } catch (err) {
       next(err);
     }
