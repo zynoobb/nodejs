@@ -1,0 +1,33 @@
+01. AWS
+  GCP와 같은 Cloud Service 의 일종
+  저렴한 비용 / 배포 속도 개선 / 유지 비용 개선
+
+02. 서버의 배포 방식
+  로컬개발 -> (빌드) -> 결과물 -> (배포) -> 클라우드 서비스
+
+03. PM2 사용법
+  PM2는 Node.js 애플리케이션의 프로세스 관리자
+  백그라운드에서 Node.js 애플리케이션을 실행하고 모니터링하는 도구
+
+  PM2 명령어
+    pm2 start index.js --watch 
+      // index.js 를 pm2로 실행 / --watch : nodemon처럼 코드 변경 시 재실행
+
+    pm2 ls
+      // 실행 중인 Pm2 리스트 조회
+    
+    pm2 stop [id]
+      // 특정 프로세스 중단
+
+    pm2 delete [id]
+      // 특정 프로세스 삭제
+    
+    pm2 kill
+      // 실행 중인 pm2 종료
+
+** 04. PM2 는 ES6문법을 지원하지 않기 때문에, 추가 라이브러리 다운이 필요함
+  yarn add -D @babel/register
+  
+  pm2 init // ecosystem.config.js 설치
+
+  pm2 start ecosystem.config.js
