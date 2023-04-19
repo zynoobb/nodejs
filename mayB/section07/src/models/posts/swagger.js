@@ -252,7 +252,7 @@ export const getPostsSwagger = {
   },
 };
 export const postLikeSwagger = {
-  "/post/:postId/like-combined": {
+  "/post/:id/like-combined": {
     post: {
       tags: ["Post"],
       summary: "게시글을 좋아요 하기 혹은 삭제합니다.",
@@ -430,6 +430,111 @@ export const createChildCommentSwagger = {
                     type: "string",
                   },
                 },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const updatePostSwagger = {
+  "/post/:id": {
+    patch: {
+      tags: ["Post"],
+      summary: "게시글을 수정합니다.",
+      security: {
+        bearerAuth: [],
+      },
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      requestBody: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                },
+                content: {
+                  type: "string",
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        204: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {},
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const updateCommentSwagger = {
+  "/post/comment/:commentId": {
+    patch: {
+      tags: ["Post"],
+      summary: "댓글을 수정합니다.",
+      security: {
+        bearerAuth: [],
+      },
+      parameters: [
+        {
+          in: "path",
+          name: "commentId",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      requestBody: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                content: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        204: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {},
               },
             },
           },
