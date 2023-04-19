@@ -543,3 +543,70 @@ export const updateCommentSwagger = {
     },
   },
 };
+
+export const deletePostSwagger = {
+  "/post/:id": {
+    delete: {
+      tags: ["Post"],
+      summary: "게시글을 삭제합니다.",
+      security: {
+        bearerAuth: [],
+      },
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        204: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {},
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+export const deleteCommentSwagger = {
+  "/post/comment/:commentId": {
+    delete: {
+      tags: ["Post"],
+      summary: "댓글을 삭제합니다.",
+      security: {
+        bearerAuth: [],
+      },
+      parameters: [
+        {
+          in: "path",
+          name: "commentId",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        204: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {},
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
