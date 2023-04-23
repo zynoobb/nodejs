@@ -1,0 +1,15 @@
+Oauth
+  인터넷 사용자들이 비밀번호를 제공하지 않고 다른 웹사이트 상의 자신들의 정보에 대해 웹사이트나 애플리케이션의 접근 권한을 부여할 수 있는 접근 위임을 위한 개방형 표준
+  외부 소셜 계정으로 간편하게 로그인 & 회원가입
+
+  Oauth 구성
+  - resource Server : 자원을 보유하고 있는 서버 / Facebook, google, kakao
+  - resource owner : 자원을 보유하고 있는 유저 / Facebook, google, kakao 유저
+  - Client : resource Server로부터 Owner의 정보를 가져오려는 클라이언트
+
+  Oauth 절차
+  - 전체 조건 / Resource server 에 클라이언트 등록
+  클라이언트 로그인 요청 -> 서버 로그인 페이지 요청 -> 카카오 로그인 페이지 제공 -> ID/PW 입력
+  클라이언트 Auth code 전달 -> redirect URL로 auth code 전달
+  accessToken 요청 / 발급
+  
