@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>로그인 / 회원가입</title>
+  </head>
+  <body>
+    <button id="google-login-button">구글로그인</button>
+    <script>
+      const googleLoginButton = document.getElementById("google-login-button");
+      googleLoginButton.addEventListener("click", () => {
+        window.location.href = "http://localhost:8000/auth/login/google";
+      });
+    </script>
+  </body>
+</html>

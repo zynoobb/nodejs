@@ -2,6 +2,7 @@ import { CreateUserDTO } from "../../users/dto";
 import { UserService } from "../../users/service";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { LoginDTO, RegisterDTO } from "../dto";
 
 dotenv.config();
 
@@ -10,6 +11,32 @@ export class AuthService {
 
   constructor() {
     this.userService = new UserService();
+  }
+
+  async googleLogin(props) {
+    let user = {
+      name: props.displayName,
+      password: String(process.env.SOCIAL_PASSWORD),
+      email: props.emails[0].value,
+      phoneNumber: process.env.SOCIAL_PHONE,
+      description: props.displayName,
+    };
+
+    const isExist = await this.userService.checkUserByEmail(user.email);
+    if (!isExist) {
+      const { accessToken, refreshToken } = await this.register(
+        new RegisterDTO(user)
+      );
+      return {
+        accessToken,
+        refreshToken,
+      };
+    } else {
+      const { accessToken, refreshToken } = await this.login(
+        new LoginDTO(user)
+      );
+      return { accessToken, refreshToken };
+    }
   }
 
   // Props : RegisterDTO
@@ -21,7 +48,6 @@ export class AuthService {
     const newUserId = await this.userService.createUser(
       new CreateUserDTO({
         ...props,
-        password: await props.hashPassword(),
       })
     );
     const accessToken = jwt.sign({ id: newUserId }, process.env.JWT_KEY, {

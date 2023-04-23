@@ -7,7 +7,7 @@ import swaggerUi from "swagger-ui-express";
 import database from "./database";
 import dotenv from "dotenv";
 import { jwtAuth } from "./middleware";
-
+import expressSession from "express-session";
 dotenv.config();
 
 //
@@ -21,6 +21,13 @@ dotenv.config();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true, limit: "700mb" }));
   app.use(jwtAuth);
+  app.use(
+    expressSession({
+      secret: process.env.SECRET_KEY,
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
 
   Controllers.forEach((controller) => {
     app.use(controller.path, controller.router);

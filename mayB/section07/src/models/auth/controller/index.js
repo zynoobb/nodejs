@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AuthService } from "../service";
 import { RegisterDTO, LoginDTO } from "../dto";
+import { googlePassport } from "../../../middleware";
 
 class AuthController {
   authService;
@@ -17,6 +18,30 @@ class AuthController {
     this.router.post("/register", this.register.bind(this));
     this.router.post("/login", this.login.bind(this));
     this.router.post("/refresh", this.refresh.bind(this));
+    this.router.get(
+      "/login/google",
+      googlePassport.authenticate("google-passport", {
+        scope: ["profile", "email", "phone"],
+        session: false,
+        failureRedirect: "/auth/login",
+      }),
+      this.googleLogin.bind(this)
+    );
+  }
+
+  async googleLogin(req, res, next) {
+    try {
+      const { accessToken, refreshToken } = await this.authService.googleLogin(
+        req.user
+      );
+
+      res.status(200).json({
+        accessToken,
+        refreshToken,
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 
   async register(req, res, next) {
