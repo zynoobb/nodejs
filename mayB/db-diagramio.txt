@@ -1,0 +1,140 @@
+db-diagram.io로 ERD 구현
+
+table User {
+  id string
+  userId varchar(200)
+  nickname varchar(200)
+  password varchar(200)
+}
+
+table day {
+  id string
+  day varchar(100) // 요일
+}
+
+table webtoonInfoDayBridge { 
+  dayId string
+  webtoonInfoId string
+}
+
+table genre {
+  id string
+  name varchar(100)
+}
+
+table WebtoonInfoGenrebridge {
+  genreId string
+  webtoonInfoId string
+}
+
+// 법적 연령 제한
+table legalAge {
+  id string
+  age Int // 전체 0 나머지 나이
+}
+
+// 웹툰 테이블
+table WebtoonInfo {
+  id string  
+  title varchar(200)
+  description mediumtext // 설명
+  thumnailUrl varchar(300)
+  legalAgeId string
+}
+
+
+table Webtoon {
+  id string
+  title varchar(200) // 회차 정보
+  thumnailUrl varchar(300)
+
+  webtoonInfoId string
+}
+
+table Star {
+  id string
+  score decimal(1,1) // 별점
+  webtoonId string
+  userId string
+}
+
+table WebtoonImage { 
+  id string
+  imageUrl varchar(300)
+  webtoonId string
+}
+
+table WebtoonComment {
+  id string
+  content string
+  parentCommentId varchar(300)
+  webtoonId string
+  userId string
+}
+
+table WebtoonCommentLike {
+  webtoonCommentId string
+  userId string
+}
+
+table WebtoonCommentHate {
+  webtoonCommentId string
+  userId string
+}
+
+table WebtoonInfoWriterBridge {
+  writerId string
+  webtoonInfoId string
+}
+
+table Writer {
+  id string
+  name varchar(200) // 작가 이름
+}
+
+table WebtoonInfoLike {
+  webtoonId string
+  userId string
+}
+
+
+
+Ref: "WebtoonInfo"."id" < "Webtoon"."webtoonInfoId"
+
+Ref: "Webtoon"."id" < "Star"."webtoonId"
+
+Ref: "User"."id" < "Star"."userId"
+
+Ref: "legalAge"."id" < "WebtoonInfo"."legalAgeId"
+
+Ref: "day"."id" < "webtoonInfoDayBridge"."dayId"
+
+Ref: "WebtoonInfo"."id" < "webtoonInfoDayBridge"."webtoonInfoId"
+
+Ref: "genre"."id" < "WebtoonInfoGenrebridge"."genreId"
+
+Ref: "WebtoonInfo"."id" < "WebtoonInfoGenrebridge"."webtoonInfoId"
+
+Ref: "Webtoon"."id" < "WebtoonImage"."webtoonId"
+
+Ref: "WebtoonComment"."id" < "WebtoonComment"."parentCommentId"
+
+Ref: "Webtoon"."id" < "WebtoonComment"."id"
+
+Ref: "User"."id" < "WebtoonComment"."userId"
+
+Ref: "WebtoonComment"."id" < "WebtoonCommentLike"."webtoonCommentId"
+
+Ref: "WebtoonComment"."id" < "WebtoonCommentHate"."webtoonCommentId"
+
+Ref: "User"."id" < "WebtoonCommentLike"."userId"
+
+Ref: "User"."id" < "WebtoonCommentHate"."userId"
+
+Ref: "Writer"."id" < "WebtoonInfoWriterBridge"."writerId"
+
+Ref: "WebtoonInfo"."id" < "WebtoonInfoWriterBridge"."webtoonInfoId"
+
+Ref: "Webtoon"."id" < "WebtoonInfoLike"."webtoonId"
+
+Ref: "User"."id" < "WebtoonInfoLike"."userId"
