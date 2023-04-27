@@ -1,0 +1,54 @@
+- where Options
+  not : 아닌 것
+  in : 중에 있는 것 | notIn : 중에 없는 것
+  lt : 미만(숫자 | 날짜) | gt : 초과(숫자 | 날짜)
+  lte : 이하(숫자 | 날짜) | gte : 이상(숫자 | 날짜)
+  contains : 포함하는 것
+  startsWith : ~로 시작하는 것 | endsWith : ~로 끝나는 것
+  
+  예시
+  const result = await prisma.user.findMany({
+    where : {
+      name : {
+        not : "not" || in : ["1", "2"] 
+      }
+    }
+  })
+
+- groupBy & aggregate
+  groupBy : 유형(컬럼)별로 데이터를 그룹화 가능 / count를 할 때 자주 사용
+  aggregate : 연산 도구
+
+  SQL : Select 컬럼 from 테이블 groupBy 그룹화할 컬럼
+  쿼리
+  const groupUsers = await prisma.user.groupBy({
+    by : ["country", "city"],
+    _count : {
+      _all : true,
+      city : true,
+    }
+  })
+
+  aggregate
+  const minMaxAge = await prisma.user.aggregate({
+    _count : {
+      _all : true
+    }, 
+    _max : {        || _max | _min | _avg
+      likes : true,
+    },
+  })
+
+- transaction 다수의 쿼리를 묶어서 처리
+  예시1
+  const 쿼리1
+  const 쿼리2
+  const 쿼리3
+  await prisma.$transaction([쿼리1, 쿼리2, 쿼리3])
+
+  예시2
+  await primsa.$transaction(async (tx)=> {
+    쿼리1 = await tx.post---.
+    쿼리2 = await tx.user---
+    쿼리3 = await tx. ---
+  })
