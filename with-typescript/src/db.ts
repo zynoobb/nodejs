@@ -11,7 +11,7 @@ const config: MysqlConnectionOptions = {
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PW,
   database: process.env.DATABASE_NAME,
-  entities: [__dirname + "/../entities/*.entity{.ts,.js}"],
+  entities: [__dirname + "/**/*.entity.*"],
   synchronize: true,
   logging: true,
   driver: mysql2,
