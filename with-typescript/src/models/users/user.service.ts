@@ -1,4 +1,4 @@
-import { IUserServiceTest } from "./user.interface";
+import { IUserServiceTest } from "./interfaces/user.interface";
 
 export class UserService {
   test({ test }: IUserServiceTest): string {
