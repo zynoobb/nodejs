@@ -18,13 +18,15 @@ app.get("/", (req, res) => {
   res.send("health Checker");
 });
 
-async () => {
+async function connectToDB() {
   try {
-    const connection = await database;
-    console.log("database connected");
+    await database;
+    console.log("😎😎 DB is running 😎😎");
   } catch (error) {
     console.log("database not connected 😂" + error);
   }
-};
+}
+
+connectToDB();
 
 export default app;
