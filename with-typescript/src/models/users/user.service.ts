@@ -1,6 +1,9 @@
 import { User } from "./entities/user.entity";
 import {
+  IUserFetchUsers,
+  IUserFetchUsersResponse,
   IUserFindOneById,
+  IUserFindOneByName,
   IUserServiceTest,
 } from "./interfaces/user.interface";
 import dotenv from "dotenv";
@@ -35,11 +38,21 @@ export class UserService {
     return user.id;
   }
 
-  async findOneByName({ name }: IUserFindOneById): Promise<User> {
+  async findOneByName({ name }: IUserFindOneByName): Promise<User> {
     return this.userRepository.findOne({ where: { name } });
   }
 
-  async findOneById({ id }): Promise<User> {
+  async findOneById({ id }: IUserFindOneById): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  async fetchUsers({
+    skip,
+    take,
+  }: IUserFetchUsers): Promise<IUserFetchUsersResponse> {
+    const users = await this.userRepository.find({ skip, take });
+    const count = users.length;
+
+    return { users, count };
   }
 }

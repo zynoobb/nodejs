@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
+import { pagination } from "../../middleware";
 import { CreateUserDTO, UserDTO } from "./dto";
+import { RequestWithPagination } from "./interfaces/user.interface";
 import { UserService } from "./user.service";
 
 class UserController {
@@ -12,8 +14,9 @@ class UserController {
   }
 
   init() {
-    this.router.get("/", this.test.bind(this));
+    this.router.get("/test", this.test.bind(this));
     this.router.get("/:id", this.fetchUser.bind(this));
+    this.router.get("/", pagination, this.fetchUsers.bind(this));
 
     this.router.post("/", this.createUser.bind(this));
   }
@@ -47,6 +50,25 @@ class UserController {
   }
 
   // fetchUsers
+  async fetchUsers(
+    req: RequestWithPagination,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { users, count } = await this.userService.fetchUsers({
+        skip: req.skip,
+        take: req.take,
+      });
+
+      res.status(200).json({
+        users: users.map((user) => new UserDTO(user)),
+        count,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   // updateUser
 
