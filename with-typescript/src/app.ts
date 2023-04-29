@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { Controllers } from "../src/models";
-import database from "./db";
+import { AppDataSource } from "./db";
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -18,15 +18,17 @@ app.get("/", (req, res) => {
   res.send("health Checker");
 });
 
-async function connectToDB() {
-  try {
-    await database;
-    console.log("😎😎 DB is running 😎😎");
-  } catch (error) {
-    console.log("database not connected 😂" + error);
-  }
-}
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(err.status || 500).json({
+    message: err.message || "서버 에러",
+  });
+});
 
-connectToDB();
+AppDataSource.initialize()
+  .then(() => {
+    console.log("😎😎 DB is running 😎😎");
+  })
+  .catch((error) => console.log(error));
 
 export default app;
