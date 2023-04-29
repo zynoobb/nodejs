@@ -1,6 +1,6 @@
 export class UpdateUserDTO {
-  name;
-  password;
+  name: string | undefined;
+  password: string | undefined;
 
   constructor(data) {
     this.name = data.name ?? undefined;

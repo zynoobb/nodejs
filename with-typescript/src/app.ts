@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import { Controllers } from "../src/models";
 import { AppDataSource } from "./db";
+import { swaggerDocs, options } from "./swagger";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -13,6 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 Controllers.forEach((controller) => {
   app.use(controller.path, controller.router);
 });
+
+app.get("/swagger.json", (req, res) => {
+  res.status(200).json(swaggerDocs);
+});
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, options));
 
 app.get("/", (req, res) => {
   res.send("health Checker");
