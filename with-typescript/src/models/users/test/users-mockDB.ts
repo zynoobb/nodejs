@@ -1,4 +1,4 @@
-import { IUserId } from "../interfaces/user.interface";
+import { v4 as uuid } from "uuid";
 
 export class MockUser {
   id: string;
@@ -11,26 +11,46 @@ export class MockUserRepository {
     {
       id: "user1_id",
       name: "user1_name",
+      password: "password",
       createAt: new Date("2022-01-01T00:00:00.000Z"),
     },
     {
       id: "user2_id",
       name: "user2_name",
+      password: "password",
       createAt: new Date("2023-01-01T00:00:00.000Z"),
     },
     {
       id: "user3_id",
-      name: "user1_name",
+      name: "user3_name",
+      password: "password",
       createAt: new Date("2022-06-01T00:00:00.000Z"),
     },
   ];
 
-  find(): MockUser[] {
-    return this.database;
+  find({ skip, take }): IMockFetchUsersResponse {
+    const filteredDatabase = this.database.map(({ password, ...rest }) => rest);
+    const count = filteredDatabase.slice(skip, take).length;
+    const users = filteredDatabase.slice(skip, take);
+    return { users, count };
   }
 
   findOne(data: IMockFindOneById): MockUser {
-    return this.database.find((el) => el.id === data.where.id);
+    const filteredDatabase = this.database.map(({ password, ...rest }) => rest);
+    return filteredDatabase.find((el) => el.id === data.where.id);
+  }
+
+  save(createUserDTO: IMockCreateUserDTO) {
+    const { name, password } = createUserDTO;
+    const id = uuid();
+    this.database.push({
+      id,
+      name,
+      password,
+      createAt: new Date(),
+    });
+    const filteredDatabase = this.database.map(({ password, ...rest }) => rest);
+    return filteredDatabase.at(-1);
   }
 }
 
@@ -38,4 +58,14 @@ interface IMockFindOneById {
   where: {
     id: string;
   };
+}
+
+interface IMockFetchUsersResponse {
+  users: MockUser[];
+  count: number;
+}
+
+interface IMockCreateUserDTO {
+  name: string;
+  password: string;
 }
