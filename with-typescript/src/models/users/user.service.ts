@@ -2,8 +2,8 @@ import { User } from "./entities/user.entity";
 import {
   IUserFetchUsers,
   IUserFetchUsersResponse,
-  IUserFindOneById,
   IUserFindOneByName,
+  IUserId,
   IUserServiceTest,
   IUserUpdateUser,
 } from "./interfaces/user.interface";
@@ -39,12 +39,24 @@ export class UserService {
     return user.id;
   }
 
+  async deleteUser({ id }: IUserId): Promise<void> {
+    const userVerify = await this.findOneById({ id });
+    if (!userVerify) throw { status: 404, message: "유저가 존재하지 않음" };
+    await this.userRepository.softDelete({ id });
+  }
+
   async findOneByName({ name }: IUserFindOneByName): Promise<User> {
     return this.userRepository.findOne({ where: { name } });
   }
 
-  async findOneById({ id }: IUserFindOneById): Promise<User> {
+  async findOneById({ id }: IUserId): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  async fetchUser({ id }: IUserId): Promise<User> {
+    const user = await this.findOneById({ id });
+    if (!user) throw { status: 404, message: "유저가 존재하지 않음" };
+    return user;
   }
 
   async fetchUsers({

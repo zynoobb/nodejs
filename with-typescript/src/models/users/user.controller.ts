@@ -21,6 +21,8 @@ class UserController {
 
     this.router.post("/", this.createUser.bind(this));
     this.router.post("/:id", this.updateUser.bind(this));
+
+    this.router.delete("/:id", this.deleteUser.bind(this));
   }
 
   test(req: Request, res: Response) {
@@ -44,7 +46,7 @@ class UserController {
   async fetchUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const user = await this.userService.findOneById({ id });
+      const user = await this.userService.fetchUser({ id });
       res.status(200).json({ user: new UserDTO(user) });
     } catch (error) {
       next(error);
@@ -86,6 +88,15 @@ class UserController {
   }
 
   // deleteUser
+  async deleteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await this.userService.deleteUser({ id });
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 const userController = new UserController();

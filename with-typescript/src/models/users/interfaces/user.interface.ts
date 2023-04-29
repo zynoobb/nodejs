@@ -9,7 +9,7 @@ export interface IUserServiceTest {
 export interface IUserFindOneByName {
   name: string;
 }
-export interface IUserFindOneById {
+export interface IUserId {
   id: string;
 }
 
