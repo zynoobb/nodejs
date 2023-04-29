@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { pagination } from "../../middleware";
 import { CreateUserDTO, UserDTO } from "./dto";
+import { UpdateUserDTO } from "./dto/update-user.dto";
 import { RequestWithPagination } from "./interfaces/user.interface";
 import { UserService } from "./user.service";
 
@@ -19,6 +20,7 @@ class UserController {
     this.router.get("/", pagination, this.fetchUsers.bind(this));
 
     this.router.post("/", this.createUser.bind(this));
+    this.router.post("/:id", this.updateUser.bind(this));
   }
 
   test(req: Request, res: Response) {
@@ -71,6 +73,17 @@ class UserController {
   }
 
   // updateUser
+  async updateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const updateUserDTO = new UpdateUserDTO(req.body);
+      await this.userService.updateUser({ id, updateUserDTO });
+
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
 
   // deleteUser
 }

@@ -5,6 +5,7 @@ import {
   IUserFindOneById,
   IUserFindOneByName,
   IUserServiceTest,
+  IUserUpdateUser,
 } from "./interfaces/user.interface";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -54,5 +55,20 @@ export class UserService {
     const count = users.length;
 
     return { users, count };
+  }
+
+  async updateUser({ id, updateUserDTO }: IUserUpdateUser): Promise<void> {
+    const user = await this.findOneById({ id });
+    if (!user) throw { status: 404, message: "유저가 존재하지 않음" };
+    let { name, password } = updateUserDTO;
+
+    if (password)
+      password = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT));
+
+    await this.userRepository.save({
+      ...user,
+      name,
+      password,
+    });
   }
 }

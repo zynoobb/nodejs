@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { UpdateUserDTO } from "../dto/update-user.dto";
 import { User } from "../entities/user.entity";
 
 export interface IUserServiceTest {
@@ -25,4 +26,9 @@ export interface IUserFetchUsers {
 export interface IUserFetchUsersResponse {
   users: User[];
   count: number;
+}
+
+export interface IUserUpdateUser {
+  id: string;
+  updateUserDTO: UpdateUserDTO;
 }
