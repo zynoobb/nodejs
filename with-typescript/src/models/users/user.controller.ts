@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { CreateUserDTO } from "./dto";
+import { CreateUserDTO, UserDTO } from "./dto";
 import { UserService } from "./user.service";
 
 class UserController {
@@ -13,6 +13,8 @@ class UserController {
 
   init() {
     this.router.get("/", this.test.bind(this));
+    this.router.get("/:id", this.fetchUser.bind(this));
+
     this.router.post("/", this.createUser.bind(this));
   }
 
@@ -34,6 +36,15 @@ class UserController {
     }
   }
   // fetchUser
+  async fetchUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const user = await this.userService.findOneById({ id });
+      res.status(200).json({ user: new UserDTO(user) });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   // fetchUsers
 

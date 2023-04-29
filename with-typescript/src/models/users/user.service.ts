@@ -38,4 +38,8 @@ export class UserService {
   async findOneByName({ name }: IUserFindOneById): Promise<User> {
     return this.userRepository.findOne({ where: { name } });
   }
+
+  async findOneById({ id }): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
+  }
 }

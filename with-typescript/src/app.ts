@@ -18,10 +18,10 @@ app.get("/", (req, res) => {
   res.send("health Checker");
 });
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(err.status || 500).json({
-    message: err.message || "서버 에러",
+app.use((error, req, res, next) => {
+  console.log(error);
+  res.status(error.status || 500).json({
+    message: error.message || "서버 에러",
   });
 });
 
