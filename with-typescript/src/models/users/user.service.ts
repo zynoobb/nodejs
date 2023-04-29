@@ -16,8 +16,9 @@ dotenv.config();
 
 @Service()
 export class UserService {
-  userRepository = AppDataSource.getRepository(User);
-
+  constructor(
+    private readonly userRepository = AppDataSource.getRepository(User)
+  ) {}
   test({ test }: IUserServiceTest): string {
     return "test1" + test;
   }
