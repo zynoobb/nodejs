@@ -20,7 +20,7 @@ class UserController {
     this.router.get("/", pagination, this.fetchUsers.bind(this));
 
     this.router.post("/", this.createUser.bind(this));
-    this.router.post("/:id", this.updateUser.bind(this));
+    this.router.patch("/:id", this.updateUser.bind(this));
 
     this.router.delete("/:id", this.deleteUser.bind(this));
   }
