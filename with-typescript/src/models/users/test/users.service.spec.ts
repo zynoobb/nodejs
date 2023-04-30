@@ -163,5 +163,23 @@ describe("UserService", () => {
   });
 
   // findOneById
+  describe("findOneById", () => {
+    it("저장되어 있는 아이디일 시 유저 정보 반환", async () => {
+      const id = "user1_id";
+      const result = await userService.findOneById({ id });
+      expect(result).toEqual({
+        id: "user1_id",
+        name: "user1_name",
+        createAt: new Date("2022-01-01T00:00:00.000Z"),
+      });
+    });
+
+    it("유효한 아이디가 아닐 시 undefined 반환", async () => {
+      const id = "user4_id";
+      const result = await userService.findOneById({ id });
+      expect(result).toBeUndefined();
+    });
+  });
+
   // findOnebyName
 });
