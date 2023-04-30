@@ -40,7 +40,7 @@ export class MockUserRepository {
     return filteredDatabase.find((el) => el.id === data.where.id);
   }
 
-  save(createUserDTO: IMockCreateUserDTO) {
+  save(createUserDTO: IMockCreateUserDTO): MockUser {
     const { name, password } = createUserDTO;
     const id = uuid();
     this.database.push({
@@ -51,6 +51,10 @@ export class MockUserRepository {
     });
     const filteredDatabase = this.database.map(({ password, ...rest }) => rest);
     return filteredDatabase.at(-1);
+  }
+
+  softDelete(id: string): void {
+    this.database = this.database.filter((user) => user.id !== id);
   }
 }
 

@@ -1,6 +1,8 @@
 import { UserService } from "../user.service";
 import { MockUserRepository } from "./users-mockDB";
 import { beforeEach, describe, it } from "@jest/globals";
+import { UpdateUserDTO } from "../dto/update-user.dto";
+import { CreateUserDTO } from "../dto";
 
 describe("UserService", () => {
   let userService: UserService;
@@ -89,14 +91,20 @@ describe("UserService", () => {
 
   describe("createUser", () => {
     it("유저 생성 시 아이디값 반환", async () => {
-      const createUserDTO = { name: "testName", password: "testPassword" };
+      const createUserDTO = new CreateUserDTO({
+        name: "testName",
+        password: "testPassword",
+      });
       const result = await userService.createUser({ createUserDTO });
 
       expect(result).toEqual(expect.any(String));
     });
 
     it("이미 존재하는 유저일 시 에러 반환", async () => {
-      const createUserDTO = { name: "user1_id", password: "testPassword" };
+      const createUserDTO = new CreateUserDTO({
+        name: "user1_id",
+        password: "testPassword",
+      });
       try {
         await userService.createUser({ createUserDTO });
       } catch (error) {
@@ -108,8 +116,52 @@ describe("UserService", () => {
     });
   });
 
-  // updateUser
-  // deleteUser
+  describe("updateUser", () => {
+    it("유저 업데이트 시 undefined 반환", async () => {
+      const id = "user1_id";
+      const updateUserDTO = new UpdateUserDTO({ name: "newName" });
+      const result = await userService.updateUser({ id, updateUserDTO });
+
+      expect(result).toBeUndefined();
+    });
+
+    it("유저 존재하지 않을 시 오류 반환", async () => {
+      try {
+        const id = "user4_id";
+        const updateUserDTO = new UpdateUserDTO({ name: "newName" });
+        await userService.updateUser({ id, updateUserDTO });
+      } catch (error) {
+        expect(error).toEqual({
+          status: 404,
+          message: "유저가 존재하지 않음",
+        });
+      }
+    });
+
+    describe("deleteUser", () => {
+      it("유저 삭제 시 undefined 반환", async () => {
+        const id = "user1_id";
+        const result = await userService.deleteUser({ id });
+
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe("deleteUser", () => {
+      it("유저 존재하지 않을 시 오류 반환", async () => {
+        try {
+          const id = "user4_id";
+          await userService.deleteUser({ id });
+        } catch (error) {
+          expect(error).toEqual({
+            status: 404,
+            message: "유저가 존재하지 않음",
+          });
+        }
+      });
+    });
+  });
+
   // findOneById
   // findOnebyName
 });
