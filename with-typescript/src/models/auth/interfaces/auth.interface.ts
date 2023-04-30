@@ -2,16 +2,16 @@ import { Response } from "express";
 import { User } from "../../users/entities/user.entity";
 import { LoginDTO } from "../dto/login.dto";
 
-export interface ILogin {
+export interface IAuthLogin {
   loginDTO: LoginDTO;
   res: Response;
 }
 
-export interface IGetAccessToken {
+export interface IAuthGetAccessToken {
   user: IAuthUser;
 }
 
-export interface ISetRefreshToken {
+export interface IAuthSetRefreshToken {
   user: IAuthUser;
   res: Response;
 }

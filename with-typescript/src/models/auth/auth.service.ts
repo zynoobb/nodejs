@@ -4,10 +4,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {
+  IAuthGetAccessToken,
+  IAuthLogin,
   IAuthRestoreToken,
-  IGetAccessToken,
-  ILogin,
-  ISetRefreshToken,
+  IAuthSetRefreshToken,
 } from "./interfaces/auth.interface";
 dotenv.config();
 
@@ -18,7 +18,7 @@ export class AuthService {
     this.userService = new UserService();
   }
 
-  async login({ loginDTO, res }: ILogin): Promise<string> {
+  async login({ loginDTO, res }: IAuthLogin): Promise<string> {
     const { name, password } = loginDTO;
 
     const user = await this.userService.findOneByName({ name });
@@ -37,13 +37,13 @@ export class AuthService {
     return this.getAccessToken({ user });
   }
 
-  getAccessToken({ user }: IGetAccessToken): string {
+  getAccessToken({ user }: IAuthGetAccessToken): string {
     return jwt.sign({ id: user.id }, process.env.JWT_ACCESS, {
       expiresIn: "1d",
     });
   }
 
-  setRefreshToken({ user, res }: ISetRefreshToken): void {
+  setRefreshToken({ user, res }: IAuthSetRefreshToken): void {
     const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH, {
       expiresIn: "2w",
     });
