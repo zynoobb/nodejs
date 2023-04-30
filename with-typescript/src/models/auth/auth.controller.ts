@@ -1,6 +1,8 @@
 import { NextFunction, Response, Router } from "express";
 import { AuthService } from "./auth.service";
 import { LoginDTO } from "./dto/login.dto";
+import { jwtAuth } from "../../middleware";
+import { RequestWithAuth } from "./interfaces/auth.interface";
 
 class AuthController {
   public router = Router();
@@ -13,6 +15,7 @@ class AuthController {
 
   init() {
     this.router.post("/login", this.login.bind(this));
+    this.router.post("/restore", jwtAuth, this.restoreToken.bind(this));
   }
 
   async login(req: Request, res: Response, next: NextFunction) {
@@ -25,6 +28,15 @@ class AuthController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async restoreToken(req: RequestWithAuth, res: Response, next: NextFunction) {
+    try {
+      const user = req.user;
+
+      const accessToken = await this.authService.restoreToken({ user, res });
+      res.status(200).json({ accessToken });
+    } catch (error) {}
   }
 }
 

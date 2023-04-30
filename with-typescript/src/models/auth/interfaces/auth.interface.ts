@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { User } from "../../users/entities/user.entity";
 import { LoginDTO } from "../dto/login.dto";
 
 export interface ILogin {
@@ -15,6 +16,14 @@ export interface ISetRefreshToken {
   res: Response;
 }
 
+export interface RequestWithAuth extends Request {
+  user: User;
+}
+
+export interface IAuthRestoreToken {
+  user: IAuthUser;
+  res: Response;
+}
 interface IAuthUser {
   id: string;
   name: string;

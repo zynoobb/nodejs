@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {
+  IAuthRestoreToken,
   IGetAccessToken,
   ILogin,
   ISetRefreshToken,
@@ -28,6 +29,11 @@ export class AuthService {
 
     this.setRefreshToken({ user, res });
 
+    return this.getAccessToken({ user });
+  }
+
+  restoreToken({ user, res }: IAuthRestoreToken): string {
+    this.setRefreshToken({ user, res });
     return this.getAccessToken({ user });
   }
 
