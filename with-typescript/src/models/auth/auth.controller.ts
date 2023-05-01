@@ -36,7 +36,9 @@ class AuthController {
 
       const accessToken = await this.authService.restoreToken({ user, res });
       res.status(200).json({ accessToken });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
