@@ -5,6 +5,7 @@ import { Controllers } from "../src/models";
 import { AppDataSource } from "./db";
 import { swaggerDocs, options } from "./swagger";
 import swaggerUi from "swagger-ui-express";
+import { redisClient } from "./redis";
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -33,10 +34,19 @@ app.use((error, req, res, next) => {
   });
 });
 
+//
+app.get("/redisCheck", (req, res) => {
+  redisClient.set("aaa", "ex", "EX", 3600);
+});
+
 AppDataSource.initialize()
   .then(() => {
     console.log("😎😎 DB is running 😎😎");
   })
   .catch((error) => console.log(error));
+
+redisClient.on("error", (error) => {
+  console.log(error);
+});
 
 export default app;
