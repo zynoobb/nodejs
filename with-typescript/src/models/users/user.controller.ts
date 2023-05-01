@@ -15,7 +15,6 @@ class UserController {
   }
 
   init() {
-    this.router.get("/test", this.test.bind(this));
     this.router.get("/:id", this.fetchUser.bind(this));
     this.router.get("/", pagination, this.fetchUsers.bind(this));
 
@@ -23,13 +22,6 @@ class UserController {
     this.router.patch("/:id", this.updateUser.bind(this));
 
     this.router.delete("/:id", this.deleteUser.bind(this));
-  }
-
-  test(req: Request, res: Response) {
-    const testText = req.body.test;
-    console.log(testText);
-    const result = this.userService.test({ test: testText });
-    res.status(200).json({ result });
   }
 
   // createUser

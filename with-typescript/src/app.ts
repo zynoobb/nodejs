@@ -34,11 +34,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-//
-app.get("/redisCheck", (req, res) => {
-  redisClient.set("aaa", "ex", "EX", 3600);
-});
-
 AppDataSource.initialize()
   .then(() => {
     console.log("😎😎 DB is running 😎😎");

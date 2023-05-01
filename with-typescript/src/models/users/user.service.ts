@@ -19,9 +19,6 @@ export class UserService {
   constructor(
     private readonly userRepository = AppDataSource.getRepository(User)
   ) {}
-  test({ test }: IUserServiceTest): string {
-    return "test1" + test;
-  }
 
   async createUser({ createUserDTO }): Promise<string> {
     const { name, password } = createUserDTO;
