@@ -103,18 +103,13 @@ export const getUsersSwagger = {
 };
 
 export const updateUserSwagger = {
-  "/user/:id": {
+  "/user": {
     patch: {
       tags: ["User"],
       summary: "유저를 수정합니다.",
-      parameters: [
+      security: [
         {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: {
-            type: "string",
-          },
+          bearerAuth: [],
         },
       ],
       requestBody: {
@@ -193,18 +188,13 @@ export const createUserSwagger = {
 };
 
 export const deleteUserSwagger = {
-  "/user/:id": {
+  "/user": {
     delete: {
       tags: ["User"],
       summary: "유저를 삭제합니다.",
-      parameters: [
+      security: [
         {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: {
-            type: "string",
-          },
+          bearerAuth: [],
         },
       ],
       responses: {
