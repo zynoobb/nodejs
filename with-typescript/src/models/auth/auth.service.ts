@@ -9,6 +9,7 @@ import {
   IAuthRestoreToken,
   IAuthSetRefreshToken,
 } from "./interfaces/auth.interface";
+import { redisClient } from "../../redis";
 dotenv.config();
 
 @Service()
@@ -39,7 +40,7 @@ export class AuthService {
 
   getAccessToken({ user }: IAuthGetAccessToken): string {
     return jwt.sign({ id: user.id }, process.env.JWT_ACCESS, {
-      expiresIn: "1d",
+      expiresIn: "5m",
     });
   }
 
@@ -48,5 +49,32 @@ export class AuthService {
       expiresIn: "2w",
     });
     res.setHeader("Set-Cookie", `refreshToken=${refreshToken}; path-/`);
+  }
+
+  async logout({ req }): Promise<void> {
+    const accessToken = req.headers["authorization"].split(" ")[1];
+    const refreshToken = req.headers["cookie"].split("=")[1];
+
+    try {
+      const jwtAccess = jwt.verify(accessToken, process.env.JWT_ACCESS);
+      const jwtRefresh = jwt.verify(refreshToken, process.env.JWT_REFRESH);
+
+      const multi = redisClient.multi();
+      multi.set(
+        accessToken,
+        accessToken,
+        "EX",
+        jwtAccess["exp"] - jwtAccess["iat"]
+      );
+      multi.set(
+        refreshToken,
+        refreshToken,
+        "EX",
+        jwtRefresh["exp"] - jwtRefresh["iat"]
+      );
+      await multi.exec();
+    } catch (error) {
+      throw { status: 500, message: "서버 오류" };
+    }
   }
 }

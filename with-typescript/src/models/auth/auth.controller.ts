@@ -16,6 +16,7 @@ class AuthController {
   init() {
     this.router.post("/login", this.login.bind(this));
     this.router.post("/restore", jwtAuth, this.restoreToken.bind(this));
+    this.router.post("/logout", jwtAuth, this.logout.bind(this));
   }
 
   async login(req: Request, res: Response, next: NextFunction) {
@@ -36,6 +37,15 @@ class AuthController {
 
       const accessToken = await this.authService.restoreToken({ user, res });
       res.status(200).json({ accessToken });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async logout(req: RequestWithAuth, res: Response, next: NextFunction) {
+    try {
+      await this.authService.logout({ req });
+      res.status(200).json({});
     } catch (error) {
       next(error);
     }
