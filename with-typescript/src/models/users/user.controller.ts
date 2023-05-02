@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { pagination } from "../../middleware";
+import { jwtAuth, pagination } from "../../middleware";
+import { RequestWithAuth } from "../auth/interfaces/auth.interface";
 import { CreateUserDTO, UserDTO } from "./dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { RequestWithPagination } from "./interfaces/user.interface";
@@ -19,9 +20,9 @@ class UserController {
     this.router.get("/", pagination, this.fetchUsers.bind(this));
 
     this.router.post("/", this.createUser.bind(this));
-    this.router.patch("/:id", this.updateUser.bind(this));
+    this.router.patch("/", jwtAuth, this.updateUser.bind(this));
 
-    this.router.delete("/:id", this.deleteUser.bind(this));
+    this.router.delete("/", jwtAuth, this.deleteUser.bind(this));
   }
 
   // createUser
@@ -67,9 +68,9 @@ class UserController {
   }
 
   // updateUser
-  async updateUser(req: Request, res: Response, next: NextFunction) {
+  async updateUser(req: RequestWithAuth, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const id = req.user.id;
       const updateUserDTO = new UpdateUserDTO(req.body);
       await this.userService.updateUser({ id, updateUserDTO });
 
@@ -80,9 +81,9 @@ class UserController {
   }
 
   // deleteUser
-  async deleteUser(req: Request, res: Response, next: NextFunction) {
+  async deleteUser(req: RequestWithAuth, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      const id = req.user.id;
       await this.userService.deleteUser({ id });
       res.status(204).json({});
     } catch (error) {
