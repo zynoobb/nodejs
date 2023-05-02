@@ -1,5 +1,5 @@
 import { UserController, UserSwagger } from "../models/users";
-import { AuthController } from "./auth";
+import { AuthController, AuthSwagger } from "./auth";
 
 export const Controllers = [
   UserController, //
@@ -8,4 +8,5 @@ export const Controllers = [
 
 export const Swaggers = [
   UserSwagger, //
+  AuthSwagger,
 ];
