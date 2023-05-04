@@ -16,3 +16,7 @@ export interface RequestWithAuthNParams extends Request {
 export interface IPostUpdatePost {
   updatePostDTO: UpdatePostDTO;
 }
+
+export interface IPostId {
+  id: string;
+}

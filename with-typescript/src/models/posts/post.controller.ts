@@ -19,6 +19,7 @@ class PostController {
 
   init() {
     this.router.post("/", jwtAuth, this.createPost.bind(this));
+    this.router.get("/:postId", this.fetchPost.bind(this));
     this.router.patch("/:postId", jwtAuth, this.updatePost.bind(this));
   }
 
@@ -28,6 +29,16 @@ class PostController {
       const createPostDTO = new CreatePostDTO(req.body);
       const id = await this.postService.createPost({ userId, createPostDTO });
       res.status(200).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async fetchPost(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { postId } = req.params;
+      const post = await this.postService.fetchPost({ id: postId });
+      res.status(200).json({ post });
     } catch (error) {
       next(error);
     }
