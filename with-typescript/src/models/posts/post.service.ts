@@ -5,6 +5,8 @@ import { PostDTO } from "./dto/post.dto";
 import { Post } from "./entities/post.entity";
 import {
   IPostCreatePost,
+  IPostFetchPostResponse,
+  IPostFetchPostsResponse,
   IPostId,
   IPostUpdatePost,
 } from "./interfaces/post.interface";
@@ -48,7 +50,7 @@ export class PostService {
     return this.postRepository.findOne({ where: { id }, relations: ["user"] });
   }
 
-  async fetchPost({ id }: IPostId): Promise<PostDTO> {
+  async fetchPost({ id }: IPostId): Promise<IPostFetchPostResponse> {
     const result = await this.postRepository.findOne({
       where: { id },
       relations: ["user"],
@@ -56,6 +58,18 @@ export class PostService {
 
     const user = result.user;
     return new PostDTO(result, user);
+  }
+
+  async fetchPosts({ skip, take }): Promise<IPostFetchPostsResponse> {
+    const data = await this.postRepository.find({
+      skip,
+      take,
+      relations: ["user"],
+    });
+    const count = data.length;
+    const posts = data.map((post) => new PostDTO(post, post.user));
+
+    return { posts, count };
   }
 
   async updatePost({ updatePostDTO }: IPostUpdatePost): Promise<void> {

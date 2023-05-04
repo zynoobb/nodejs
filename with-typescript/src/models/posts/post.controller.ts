@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { jwtAuth } from "../../middleware";
+import { jwtAuth, pagination } from "../../middleware";
 import { RequestWithAuth } from "../auth/interfaces/auth.interface";
+import { RequestWithPagination } from "../users/interfaces/user.interface";
 import { UserService } from "../users/user.service";
 import { CreatePostDTO } from "./dto/create-post.dto";
+import { PostDTO } from "./dto/post.dto";
 import { UpdatePostDTO } from "./dto/update-post.dto";
 import { RequestWithAuthNParams } from "./interfaces/post.interface";
 import { PostService } from "./post.service";
@@ -19,7 +21,8 @@ class PostController {
 
   init() {
     this.router.post("/", jwtAuth, this.createPost.bind(this));
-    this.router.get("/:postId", this.fetchPost.bind(this));
+    this.router.get("/detail/:postId", this.fetchPost.bind(this));
+    this.router.get("/", pagination, this.fetchPosts.bind(this));
     this.router.patch("/:postId", jwtAuth, this.updatePost.bind(this));
   }
 
@@ -39,6 +42,26 @@ class PostController {
       const { postId } = req.params;
       const post = await this.postService.fetchPost({ id: postId });
       res.status(200).json({ post });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async fetchPosts(
+    req: RequestWithPagination,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { posts, count } = await this.postService.fetchPosts({
+        skip: req.skip,
+        take: req.take,
+      });
+
+      res.status(200).json({
+        posts: posts.map((post) => post),
+        count,
+      });
     } catch (error) {
       next(error);
     }
