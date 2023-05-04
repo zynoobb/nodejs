@@ -1,6 +1,6 @@
 import { UserController, UserSwagger } from "./users";
 import { AuthController, AuthSwagger } from "./auth";
-import { PostController } from "./posts";
+import { PostController, PostSwagger } from "./posts";
 
 export const Controllers = [
   UserController, //
@@ -10,5 +10,6 @@ export const Controllers = [
 
 export const Swaggers = [
   UserSwagger, //
-  AuthSwagger,
+  AuthSwagger, //
+  PostSwagger, //
 ];
