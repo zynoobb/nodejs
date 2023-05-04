@@ -35,3 +35,8 @@ export interface IPostFetchPostsResponse {
   posts: PostDTO[];
   count: number;
 }
+
+export interface IPostDeletePost {
+  postId: string;
+  userId: string;
+}

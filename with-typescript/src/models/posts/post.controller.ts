@@ -23,7 +23,8 @@ class PostController {
     this.router.post("/", jwtAuth, this.createPost.bind(this));
     this.router.get("/detail/:postId", this.fetchPost.bind(this));
     this.router.get("/", pagination, this.fetchPosts.bind(this));
-    this.router.patch("/:postId", jwtAuth, this.updatePost.bind(this));
+    this.router.patch("/detail/:postId", jwtAuth, this.updatePost.bind(this));
+    this.router.delete("/detail/:postId", jwtAuth, this.deletePost.bind(this));
   }
 
   async createPost(req: RequestWithAuth, res: Response, next: NextFunction) {
@@ -32,6 +33,21 @@ class PostController {
       const createPostDTO = new CreatePostDTO(req.body);
       const id = await this.postService.createPost({ userId, createPostDTO });
       res.status(200).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deletePost(
+    req: RequestWithAuthNParams,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { postId } = req.params;
+      const userId = req.user.id;
+      await this.postService.deletePost({ postId, userId });
+      res.status(204).json({});
     } catch (error) {
       next(error);
     }
