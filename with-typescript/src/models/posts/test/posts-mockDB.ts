@@ -1,9 +1,11 @@
+import { UserDTO } from "../../users/dto";
+
 export class MockPost {
   id: string;
   title: string;
   content: string;
   createAt: string;
-  user: string;
+  user: UserDTO;
 }
 
 class MockUserRepository {
@@ -44,10 +46,22 @@ export class MockPostRepository {
     },
   ];
 
-  findOne(data: IMockFindOnePostId) {
+  findOne(data: IMockFindOnePostId): IMockPostFetchPostResponse {
     const post = this.database.find((el) => el.id === data.where.id);
     const user = this.userRepository.findOne(post.user);
+
     return { ...post, user };
+  }
+
+  find({ skip, take }): IMockPostFetchPostResponse[] {
+    const filteredDatabase = this.database.map((post) => {
+      const user = this.userRepository.findOne(post.user);
+      return { ...post, user };
+    });
+    const posts = filteredDatabase.slice(skip, take);
+
+    console.log(posts);
+    return posts;
   }
 }
 
@@ -56,4 +70,16 @@ interface IMockFindOnePostId {
     id: string;
   };
   relations: ["User"];
+}
+
+interface IMockPostFetchPostResponse {
+  id: string;
+  title: string;
+  content: string;
+  createAt: Date;
+  user: {
+    id: string;
+    name: string;
+    createAt: Date;
+  };
 }
